@@ -6,9 +6,8 @@ class QuestionGenerationAgent:
     def set_strategy(self, strategy):
         self.strategy = strategy
 
-    def generate(self, analysis, activity_type, number_of_questions):
+    def generate(self, analysis, number_of_questions):
         return self.strategy.generate(
             analysis,
-            activity_type,
             number_of_questions
         )

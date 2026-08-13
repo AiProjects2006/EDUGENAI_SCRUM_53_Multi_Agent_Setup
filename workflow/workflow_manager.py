@@ -6,8 +6,18 @@ from answer_evaluation_agent.agent.answer_evaluation_agent import AnswerEvaluati
 from content_analysis_agent.strategies.pdf_strategy import PDFAnalysisStrategy
 from question_generation_agent.strategies.mcq_strategy import MCQStrategy
 from question_generation_agent.strategies.fill_blank_strategy import FillBlankStrategy
+from question_generation_agent.strategies.true_false_strategy import TrueFalseStrategy
+from question_generation_agent.strategies.matching_strategy import MatchingStrategy
+from question_generation_agent.strategies.sorting_strategy import SortingStrategy
+from question_generation_agent.strategies.drag_drop_strategy import DragDropStrategy
+from question_generation_agent.strategies.poll_strategy import PollStrategy
+from question_generation_agent.strategies.short_answer_strategy import ShortAnswerStrategy
+from question_generation_agent.strategies.hotspot_strategy import HotspotStrategy
+from question_generation_agent.strategies.problem_solving_strategy import ProblemSolvingStrategy
+from question_generation_agent.strategies.application_based_strategy import ApplicationBasedStrategy
 from question_validation_agent.strategies.grammar_validation_strategy import GrammarValidationStrategy
 from answer_evaluation_agent.strategies.mcq_strategy import MCQStrategy as EvaluationStrategy
+
 
 
 class WorkflowManager:
@@ -50,12 +60,38 @@ class WorkflowManager:
         elif activity_type == "FillInTheBlanks":
             self.question_agent.strategy = FillBlankStrategy()
 
+        elif activity_type == "Matching":
+            self.question_agent.set_strategy(MatchingStrategy())
+
+        elif activity_type == "Sorting":
+            self.question_agent.set_strategy(SortingStrategy())
+
+        elif activity_type == "DragDrop":
+            self.question_agent.set_strategy(DragDropStrategy())
+
+        elif activity_type == "Poll":
+            self.question_agent.set_strategy(PollStrategy())
+
+        elif activity_type == "TRUE_FALSE":
+            self.question_agent.strategy = TrueFalseStrategy()
+
+        elif activity_type == "ShortAnswer":
+            self.question_agent.set_strategy(ShortAnswerStrategy())
+
+        elif activity_type == "Hotspot":
+            self.question_agent.set_strategy(HotspotStrategy())
+
+        elif activity_type == "ProblemSolving":
+            self.question_agent.set_strategy(ProblemSolvingStrategy())
+
+        elif activity_type == "ApplicationBased":
+            self.question_agent.set_strategy(ApplicationBasedStrategy())
+
         else:
             raise ValueError(f"Unsupported activity type: {activity_type}")
 
         questions = self.question_agent.generate(
             analysis,
-            activity_type,
             number_of_questions
         )
 

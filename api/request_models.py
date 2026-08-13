@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class ActivityRequest(BaseModel):
     subject: str
+    topic: str
     activityType: str
     numberOfQuestions: int
 

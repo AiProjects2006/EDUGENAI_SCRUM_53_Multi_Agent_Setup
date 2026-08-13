@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 
 from api.request_models import ActivityRequest, EvaluationRequest
-from api.response_models import ActivityResponse, ActivityQuestion, EvaluationResponse
-from content_analysis_agent.pdf_reader import read_pdf
+from api.response_models import ActivityResponse, EvaluationResponse
+from mcp_server.google_drive import read_google_drive
+from mcp_server.google_drive import search_pdf, read_google_drive
 
 from workflow.workflow_manager import WorkflowManager
 
@@ -15,7 +16,7 @@ app = FastAPI(
 workflow = WorkflowManager()
 
 
-@app.post("/")
+@app.get("/")
 def home():
     return {
         "message": "AI Activity Generation API"
@@ -27,12 +28,13 @@ def home():
     response_model=ActivityResponse
 )
 def generate_activity(request: ActivityRequest):
-    if request.subject == "Science":
-        lesson = read_pdf("content_analysis_agent/pdfs/science.pdf")
-    elif request.subject == "Maths":
-        lesson = read_pdf("content_analysis_agent/pdfs/maths.pdf")
-    else:
-        lesson = read_pdf("content_analysis_agent/pdfs/default.pdf")
+
+    file_id = search_pdf(
+        request.subject,
+        request.topic
+    )
+
+    lesson = read_google_drive(file_id)
 
     questions = workflow.run(
         lesson,
@@ -40,16 +42,37 @@ def generate_activity(request: ActivityRequest):
         request.numberOfQuestions
     )
 
+    for q in questions:
+        q["type"] = request.activityType
+
     return ActivityResponse(
         status="SUCCESS",
-        questions=[
-            ActivityQuestion(
-                question=q.get("question", ""),
-                options=q.get("options", []),
-                answer=q.get("answer", "")
-            )
-            for q in questions
-        ]
+        activityType=request.activityType,
+        questions=questions
+    )
+
+def generate_activity(request: ActivityRequest):
+    file_id = search_pdf(
+        request.subject,
+        request.topic
+    )
+
+    lesson = read_google_drive(file_id)
+
+    #call workflow object run method
+    questions = workflow.run(
+        lesson,
+        request.activityType,
+        request.numberOfQuestions
+    )
+
+    for q in questions:
+        q["type"] = request.activityType
+
+    return ActivityResponse(
+        status="SUCCESS",
+        activityType=request.activityType,
+        questions=questions
     )
 @app.post("/evaluate-answer")
 def evaluate_answer(request: EvaluationRequest):

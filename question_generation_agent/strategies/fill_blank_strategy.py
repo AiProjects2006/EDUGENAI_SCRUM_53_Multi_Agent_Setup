@@ -27,9 +27,5 @@ Example:
 """
 
         response = ask_llm(prompt)
-
-        #print("LLM Response:")
-        #print(response)
-
         return json.loads(response)
 

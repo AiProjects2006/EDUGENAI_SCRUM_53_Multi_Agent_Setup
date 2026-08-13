@@ -4,9 +4,9 @@ import json
 
 class MCQStrategy(QuestionStrategy):
 
-    def generate(self, analysis, activity_type, number_of_questions):
+    def generate(self, analysis, number_of_questions):
         prompt = f"""
-    Generate {number_of_questions} {activity_type} question(s).
+    Generate {number_of_questions} question(s).
 
     Use this analyzed content:
 
