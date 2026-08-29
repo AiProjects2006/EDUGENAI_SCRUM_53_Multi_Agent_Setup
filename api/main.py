@@ -51,29 +51,7 @@ def generate_activity(request: ActivityRequest):
         questions=questions
     )
 
-def generate_activity(request: ActivityRequest):
-    file_id = search_pdf(
-        request.subject,
-        request.topic
-    )
 
-    lesson = read_google_drive(file_id)
-
-    #call workflow object run method
-    questions = workflow.run(
-        lesson,
-        request.activityType,
-        request.numberOfQuestions
-    )
-
-    for q in questions:
-        q["type"] = request.activityType
-
-    return ActivityResponse(
-        status="SUCCESS",
-        activityType=request.activityType,
-        questions=questions
-    )
 @app.post("/evaluate-answer")
 def evaluate_answer(request: EvaluationRequest):
 
