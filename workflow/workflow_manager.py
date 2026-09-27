@@ -23,7 +23,7 @@ from answer_evaluation_agent.strategies.mcq_strategy import MCQStrategy as Evalu
 class WorkflowManager:
 
     def __init__(self):
-
+        # Create fresh agents for each instance
         self.content_agent = ContentAnalysisAgent(
             PDFAnalysisStrategy()
         )
@@ -41,6 +41,9 @@ class WorkflowManager:
         )
 
     def run(self, lesson, activity_type, number_of_questions):
+        # Create fresh content analysis strategy for each request
+        # This ensures RAG clears cache between different subjects
+        self.content_agent.strategy = PDFAnalysisStrategy()
 
         # Content Analysis Agent
         #print("========== Content Analysis Agent ==========")
