@@ -11,6 +11,8 @@ class VectorStoreError(RuntimeError):
     """Base error for vector-store failures."""
 
 
+
+
 class VectorStoreDependencyError(VectorStoreError):
     """Raised when an optional vector-store dependency is unavailable."""
 
