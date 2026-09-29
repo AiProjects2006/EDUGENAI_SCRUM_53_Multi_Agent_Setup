@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import Any, Iterable, Mapping
 
 
+
 @dataclass(slots=True)
 class TextChunk:
     """Represents a chunk of text and its source offsets."""
@@ -15,6 +16,7 @@ class TextChunk:
     start: int
     end: int
     metadata: dict[str, Any] = field(default_factory=dict)
+
 
 
 class TextChunker:
